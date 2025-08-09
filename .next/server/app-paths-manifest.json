@@ -1,8 +1,8 @@
 {
   "/page": "app/page.js",
+  "/properties/page": "app/properties/page.js",
+  "/properties/[slug]/page": "app/properties/[slug]/page.js",
   "/privacy/page": "app/privacy/page.js",
   "/terms/page": "app/terms/page.js",
-  "/api/reviews/hostaway/route": "app/api/reviews/hostaway/route.js",
-  "/properties/page": "app/properties/page.js",
-  "/properties/[slug]/page": "app/properties/[slug]/page.js"
+  "/api/reviews/hostaway/route": "app/api/reviews/hostaway/route.js"
 }
