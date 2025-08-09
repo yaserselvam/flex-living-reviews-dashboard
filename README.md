@@ -1,121 +1,190 @@
 # Flex Living Reviews Dashboard
 
-Manager dashboard and public review pages for Flex Living properties.
+## Introduction
 
-## Overview
+This project is a completed manager dashboard and public review pages application for Flex Living properties. It was developed as part of an internal assessment to demonstrate proficiency with Next.js (App Router), React, TypeScript, and Tailwind CSS, along with API integration and state management. The project is now fully functional and deployed on Vercel for live access and demonstration.
 
-- Built with **Next.js (App Router)**, **React**, **Tailwind CSS**, and **TypeScript**.
-- Fetches reviews from Hostaway sandbox via `/api/reviews/hostaway`.
-- Falls back to `/mock/reviews.json` if the API returns zero reviews.
-- Dashboard includes filters for rating, category, channel, and date, with sorting options.
-- Toggle "Show on Website" for reviews via `PATCH /api/reviews/[id]`.
-- Public page at `/properties/[listing]` displays only **approved** reviews.
-- Optional: Stubbed Google Reviews endpoint (`/api/reviews-google`) for exploration, requires `GOOGLE_API_KEY`.
+The dashboard allows property managers to view, filter, and approve guest reviews fetched from the Hostaway sandbox API, with a fallback to mock data if needed. Approved reviews are then publicly displayed on property-specific pages. The project also includes a stubbed Google Reviews API endpoint for potential future expansion.
 
-## Tech Stack and Reasoning
+## Features
 
-- **Next.js App Router**: Co-locates server route handlers with pages, simplifies Vercel deployment.
-- **TypeScript**: Ensures type safety for reviews and normalization, reducing bugs.
-- **Tailwind CSS**: Enables fast, consistent, and responsive UI design.
-- **date-fns**: Lightweight library for date filtering.
-- **zod**: Available for future schema validation if Hostaway API changes.
+- **Dashboard with Filters and Sorting**: Filter reviews by rating, category, channel, and date range. Sort reviews by date or rating.
+- **API Integration**: Fetches reviews from Hostaway sandbox API with fallback to local mock data.
+- **Review Approval Toggle**: Managers can approve or unapprove reviews via a toggle; approval status is persisted in an in-memory store.
+- **Public Reviews Page**: Displays only approved reviews for each property, accessible via `/properties/[listing]`.
+- **Responsive UI**: Built with Tailwind CSS for consistent styling and responsiveness.
+- **Sticky Footer and Top Navigation Bar**: For improved user experience and accessibility.
+- **Stubbed Google Reviews Endpoint**: `/api/reviews-google` provides a placeholder for integrating Google Reviews with proper API keys.
+- **Accessibility**: Semantic HTML, keyboard navigable controls, and sufficient color contrast.
 
-## Setup
+## Installation & Local Development
 
-1. Clone the repository and install dependencies:
+Follow these steps to set up and run the project locally:
+
+1. **Clone the repository**:
+
    ```bash
-   pnpm i # or npm i / yarn
+   git clone <repository-url>
+   cd flex-living-reviews-dashboard
    ```
 
-2. Create `.env.local` from the example:
+2. **Install dependencies** (using your preferred package manager):
+
+   ```bash
+   pnpm install
+   # or
+   npm install
+   # or
+   yarn install
+   ```
+
+3. **Create and configure environment variables**:
+
+   Copy the example environment file:
+
    ```bash
    cp .env.local.example .env.local
    ```
 
-3. Configure environment variables in `.env.local`:
+   Edit `.env.local` and set the following variables:
+
    ```
    ACCOUNT_ID=your_hostaway_sandbox_account_id
    API_KEY=your_hostaway_sandbox_api_key
    GOOGLE_API_KEY=your_google_api_key (optional, for Google Reviews exploration)
    ```
 
-4. Run locally:
+   Replace the placeholder values with your actual API credentials.
+
+4. **Run the development server**:
+
    ```bash
    pnpm dev
+   # or
+   npm run dev
+   # or
+   yarn dev
    ```
-   Open `http://localhost:3000` in your browser.
 
-## API
+5. **Open your browser** and navigate to [http://localhost:3000](http://localhost:3000) to access the dashboard.
 
-- **GET /api/reviews/hostaway**  
-  Returns normalized JSON:
-  ```json
-  {
-    "listings": { "shoreditch-loft": { "name": "Flex Living - Shoreditch Loft", "slug": "shoreditch-loft" }},
-    "reviews": [ ... ]
-  }
-  ```
-  Uses Hostaway API; falls back to `/mock/reviews.json` if no reviews are returned.
+## Deployment
 
-- **PATCH /api/reviews/[id]**  
-  Body: `{ "approved": true|false }`  
-  Updates review approval status.  
-  **Persistence**: Uses an in-memory store (resets on cold start), sufficient for the assessment. For production, replace with Vercel KV or Postgres/Supabase by updating `lib/approvalsStore.ts`.
+This project is configured for deployment on Vercel, leveraging Next.js App Router features for server-side rendering and API routes.
 
-- **GET /api/reviews-google** (optional)  
-  Returns `[]` unless `GOOGLE_API_KEY` is configured. Stubbed for exploration.
+### Deployment Steps:
 
-## Public Pages
+1. **Push the project to a GitHub repository** (public or private):
 
-- `/properties/[listing]`: Displays a property hero section and only approved reviews.
+   ```bash
+   git add .
+   git commit -m "Initial commit"
+   git push origin main
+   ```
 
-## Google Reviews Exploration
+2. **Set up a new project in Vercel**:
 
-- **Feasibility**: Requires a Google Place ID and Places Details API (paid, with quotas and review access rules).
-- **Privacy**: Comply with Google’s attribution/display requirements.
-- **Status**: Stub endpoint at `/api/reviews-google`. Enable by adding `GOOGLE_API_KEY` and a Place ID.
+   - Go to [Vercel Dashboard](https://vercel.com/dashboard).
+   - Click **Add New → Project** and import your GitHub repository.
+   - Vercel will auto-detect the Next.js framework.
+   - Add the following environment variables in the Vercel project settings:
 
-## Deployment (Vercel)
-
-1. Push the project to a GitHub repository (public or private).
-2. In Vercel:
-   - Go to **Add New → Project** and import your repository.
-   - Set **Framework Preset**: Next.js (auto-detected).
-   - Add environment variables:
      ```
      ACCOUNT_ID=your_hostaway_sandbox_account_id
      API_KEY=your_hostaway_sandbox_api_key
      GOOGLE_API_KEY=your_google_api_key (optional)
      ```
-   - Use default build command: `next build`.
-   - Deploy.
-3. Post-deploy checklist:
-   - Verify `/api/reviews/hostaway` returns JSON with reviews and listings.
-   - Visit `/` to confirm the dashboard loads, filters work, and review cards render.
-   - Toggle "Show on Website" to ensure state updates.
-   - Visit `/properties/<listing-slug>` to confirm only approved reviews appear.
-   - (Optional) Enable `GOOGLE_API_KEY` and verify `/api/reviews-google`.
+
+3. **Deploy the project**:
+
+   - Use the default build command `next build`.
+   - Trigger deployment by pushing new commits or manually from the Vercel dashboard.
+
+4. **Post-deployment verification**:
+
+   - Confirm `/api/reviews/hostaway` returns JSON with listings and reviews.
+   - Visit `/` to ensure the dashboard loads correctly, filters and sorting work, and review cards render.
+   - Test toggling "Show on Website" for reviews updates their approval status.
+   - Access `/properties/<listing-slug>` to verify only approved reviews display.
+   - (Optional) Enable `GOOGLE_API_KEY` and test `/api/reviews-google` endpoint.
+
+## Project Structure
+
+```
+flex-living-reviews-dashboard/
+├── app/
+│   ├── api/
+│   │   ├── reviews/
+│   │   │   ├── hostaway/
+│   │   │   │   └── route.ts           # Hostaway API route handler
+│   │   │   └── [id]/
+│   │   │       └── route.ts           # PATCH review approval API route
+│   │   └── reviews-google/
+│   │       └── route.ts               # Stub Google Reviews API route
+│   ├── properties/
+│   │   └── [listing]/
+│   │       └── page.tsx               # Public property reviews page
+│   ├── page.tsx                      # Dashboard main page
+│   └── layout.tsx                    # Application layout with topnav and footer
+├── components/
+│   ├── FilterBar.tsx                 # Filters and sorting UI components
+│   ├── ReviewCard.tsx                # Individual review display and approval toggle
+│   └── ...                          # Other UI components
+├── lib/
+│   ├── approvalsStore.ts             # In-memory store for review approvals
+│   ├── hostaway.ts                   # Hostaway API fetching and fallback logic
+│   └── normalize.ts                  # Data normalization utilities
+├── mock/
+│   └── reviews.json                  # Mock reviews fallback data
+├── public/
+│   └── ...                          # Static assets
+├── styles/
+│   └── globals.css                   # Global Tailwind CSS styles
+├── .env.local.example                # Example environment variables file
+├── next.config.ts                   # Next.js configuration
+├── tailwind.config.ts               # Tailwind CSS configuration
+├── tsconfig.json                    # TypeScript configuration
+├── package.json                     # Project dependencies and scripts
+└── README.md                        # Project documentation (this file)
+```
+
+## API Overview
+
+- **GET /api/reviews/hostaway**  
+  Returns normalized JSON data containing listings and reviews fetched from Hostaway sandbox API, with fallback to mock data if no reviews are returned.
+
+- **PATCH /api/reviews/[id]**  
+  Accepts `{ "approved": true|false }` in the request body to update the approval status of a review. Uses an in-memory store for persistence during runtime.
+
+- **GET /api/reviews-google** (optional)  
+  Stub endpoint returning an empty array unless `GOOGLE_API_KEY` is configured, intended for future Google Reviews integration.
+
+## Known Issues
+
+- **In-memory approval store**: The current implementation stores review approval states in memory, which resets on server restarts. For production, this should be replaced with persistent storage such as Vercel KV, Postgres, or Supabase.
+- **Google Reviews integration**: The Google Reviews endpoint is stubbed and requires API keys and Place IDs to function fully.
+- **Limited error handling**: Some API error scenarios may not be fully surfaced to users; improvements could be made for better UX.
+
+## Future Improvements
+
+- **Persistent storage for approvals**: Integrate a database or key-value store to persist review approval status across deployments.
+- **Full Google Reviews integration**: Implement fetching and displaying Google Reviews with proper attribution and compliance with Google’s policies.
+- **Enhanced filtering and sorting**: Add more granular filter options and multi-criteria sorting.
+- **User authentication**: Add login functionality to secure the dashboard and restrict approval actions.
+- **Unit and integration tests**: Increase test coverage for API routes and React components.
+- **Improved accessibility**: Conduct audits and enhance keyboard navigation and screen reader support.
 
 ## Accessibility
 
-- Semantic HTML for sections.
-- Labels on inputs, keyboard-focusable buttons.
-- Sufficient color contrast for readability.
+- Uses semantic HTML elements for structure.
+- All inputs have associated labels.
+- Buttons and interactive elements are keyboard-focusable.
+- Color contrast meets accessibility standards.
 
 ## License
 
 Internal assessment project.
 
-## Requirement → Implementation Checklist
+---
 
-- **Next.js App Router, Tailwind, TypeScript, Vercel-ready**: Configured in `package.json`, `app/`, `tailwind.config.ts`, `tsconfig.json`, `next.config.ts`.
-- **Hostaway sandbox integration**: Implemented in `lib/hostaway.ts` and `app/api/reviews/hostaway/route.ts`.
-- **Mock fallback**: `lib/hostaway.ts` imports `/mock/reviews.json` when API returns no reviews.
-- **Normalization**: Handled in `lib/normalize.ts` for listing, review type, channel, and date.
-- **Dashboard filters/sort**: Implemented in `components/FilterBar.tsx` and `app/page.tsx`.
-- **Review approval toggle**: `components/ReviewCard.tsx`, `PATCH /app/api/reviews/[id]/route.ts`, with in-memory store in `lib/approvalsStore.ts`.
-- **Public property page**: `app/properties/[listing]/page.tsx` shows approved reviews.
-- **Required API route**: `/api/reviews/hostaway` returns normalized data.
-- **Google Reviews exploration**: Stubbed in `app/api/reviews-google/route.ts` with README notes.
-- **README**: Includes setup, env placeholders, local run, Vercel deploy, and Google exploration notes.
-- **No API keys in code**: Uses `.env.local.example` and README instructions.
+Thank you for reviewing the Flex Living Reviews Dashboard project. For any questions or contributions, please open an issue or pull request on the GitHub repository.
