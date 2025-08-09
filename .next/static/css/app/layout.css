@@ -705,6 +705,9 @@ video {
 .p-6 {
   padding: 1.5rem;
 }
+.p-8 {
+  padding: 2rem;
+}
 .px-4 {
   padding-left: 1rem;
   padding-right: 1rem;
@@ -721,8 +724,15 @@ video {
   padding-top: 2.5rem;
   padding-bottom: 2.5rem;
 }
+.py-16 {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
 .pl-6 {
   padding-left: 1.5rem;
+}
+.text-center {
+  text-align: center;
 }
 .font-serif {
   font-family: var(--logo-serif), ui-serif, Georgia, Cambria, Times New Roman, Times, serif;
