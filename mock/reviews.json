@@ -1,0 +1,38 @@
+[
+  {
+    "id": "r1",
+    "listingName": "Flex Living - Shoreditch Loft",
+    "type": "public",
+    "channel": "hostaway",
+    "rating": 5,
+    "categories": ["cleanliness", "communication", "location"],
+    "comment": "Great stay. Clean and close to everything.",
+    "guestName": "Anna",
+    "submittedAt": "2024-12-05T10:00:00Z",
+    "approved": false
+  },
+  {
+    "id": "r2",
+    "listingName": "Flex Living - Shoreditch Loft",
+    "type": "public",
+    "channel": "hostaway",
+    "rating": 4,
+    "categories": ["value", "accuracy"],
+    "comment": "Good value, a few minor quirks.",
+    "guestName": "Ben",
+    "submittedAt": "2025-01-11T12:00:00Z",
+    "approved": false
+  },
+  {
+    "id": "r3",
+    "listingName": "Flex Living - Canary Wharf Apt",
+    "type": "private",
+    "channel": "hostaway",
+    "rating": 3,
+    "categories": ["respect_house_rules", "communication"],
+    "comment": "Host was responsive. Some noise at night.",
+    "guestName": "Cara",
+    "submittedAt": "2025-02-02T09:30:00Z",
+    "approved": false
+  }
+]
