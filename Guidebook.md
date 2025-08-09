@@ -36,6 +36,8 @@ Displays:
 Lists all properties with approved reviews.  
 Each property has a link to view its public review page.
 
+<div style="page-break-before: always;"></div>
+
 ### `/properties/[listing]` - Public Review Page
 Shows approved reviews for a single property with:
 - Review date
@@ -69,13 +71,14 @@ The project is deployed on Vercel.
 - **Live URL:** https://flex-living-reviews-dashboard-tawny.vercel.app/
 - **GitHub Repository:** https://github.com/yaserselvam/flex-living-reviews-dashboard
 
-## Notes for Reviewer
 - All assignment requirements implemented and tested in the deployed build.
 - Fixes added for:
   - `useSearchParams()` build issues via suspense handling
   - Preserving filter state between dashboard and public views
   - Improved accessibility (semantic HTML, ARIA support, keyboard navigation)
   - Optimized production deployment
+ 
+<div style="page-break-before: always;"></div>
 
 ## Screenshots
 
@@ -87,6 +90,8 @@ The project is deployed on Vercel.
 
     ![Properties](public/screenshots/02-properties.png)
 
+<div style="page-break-before: always;"></div>
+
 - Public Review - Canary Wharf: `public/screenshots/03-review-canary.png`
 
     ![Canary Wharf](public/screenshots/03-review-canary.png)
@@ -95,6 +100,8 @@ The project is deployed on Vercel.
 
     ![Shoreditch](public/screenshots/04-review-shoreditch.png)
 
+<div style="page-break-before: always;"></div>
+
 - Privacy Policy: `public/screenshots/05-privacy.png`
 
     ![Privacy Policy](public/screenshots/05-privacy.png)
@@ -102,6 +109,8 @@ The project is deployed on Vercel.
 - Terms of Service: `public/screenshots/06-terms.png`
 
     ![Terms](public/screenshots/06-terms.png)
+
+<div style="page-break-before: always;"></div>
 
 - Approval Toggle: `public/screenshots/07-approval-toggle.png`
 
