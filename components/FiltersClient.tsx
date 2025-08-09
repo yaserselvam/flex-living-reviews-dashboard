@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import type { Route } from "next";
 import type { FilterState } from "@/lib/types";
 import FilterBar from "./FilterBar";
 
@@ -108,7 +109,7 @@ export default function FiltersClient({ initialFilters, categories, channels }: 
 
       // Use replace to avoid history spam
       startTransition(() => {
-        router.replace(nextHref, { scroll: false });
+        router.replace(nextHref as Route, { scroll: false });
       });
     }, 200); // 200ms feels responsive without thrash
 
