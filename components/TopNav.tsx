@@ -12,24 +12,25 @@ export default function TopNav() {
   // -- Where am I? -----------------------------------------------------------
   const isOnPublic = pathname.startsWith("/properties");
 
-  // Create a stable string of the current query params
+  // Stable string of current query params
   const currentQS = useMemo(() => sp.toString(), [sp]);
 
   // Link to public page (carry dashboard filters forward as ?return=<qs>)
-  const toPublicHref = useMemo(() => {
+  const toPublicHref: string = useMemo(() => {
     if (!currentQS) return "/properties";
     return `/properties?return=${encodeURIComponent("?" + currentQS)}`;
   }, [currentQS]);
 
   // If I'm on public, provide a safe "Back to Dashboard"
-  const returnQS = sp.get("return") ?? "";
-  const toDashboardHref = useMemo(() => {
-    if (!returnQS || returnQS === "?" || returnQS.trim().length <= 1) return "/";
-    const qs = returnQS.startsWith("?") ? returnQS : `?${returnQS}`;
-    return `/${qs}`;
-  }, [returnQS]);
+  const rawReturn = sp.get("return") ?? "";
+  const toDashboardHref: string = useMemo(() => {
+    if (!rawReturn || rawReturn === "?" || rawReturn.trim().length <= 1) return "/";
+    const qs = rawReturn.startsWith("?") ? rawReturn : `?${rawReturn}`;
+    // Ensure only one leading slash and preserve the query string
+    return qs ? `/${qs.replace(/^\?/, "?")}` : "/";
+  }, [rawReturn]);
 
-  const href = isOnPublic ? toDashboardHref : toPublicHref;
+  const href: string = isOnPublic ? toDashboardHref : toPublicHref;
   const label = isOnPublic ? "Back to Dashboard" : "Public reviews";
 
   // Cream -> green transition on scroll
@@ -47,7 +48,7 @@ export default function TopNav() {
       <div className="container flex items-center justify-between">
         {/* Logo (SVG mark + word) */}
         <Link href="/" prefetch={false} className="logo header-link" aria-label="Flex Living home">
-          <svg viewBox="0 0 48 48" aria-hidden="true" className="logo-mark">
+          <svg viewBox="0 0 48 48" aria-hidden="true" className="logo-mark" role="img">
             {/* house outline */}
             <path
               d="M8 22 L24 10 L40 22 V38a3 3 0 0 1-3 3H11a3 3 0 0 1-3-3Z"

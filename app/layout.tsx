@@ -1,5 +1,6 @@
 // app/layout.tsx
 import "./globals.css";
+import { Suspense } from "react";
 import TopNav from "@/components/TopNav";
 import Footer from "@/components/Footer";
 
@@ -12,8 +13,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="bg-[var(--flex-cream)]">
-        <TopNav />
-        <main className="container stack-lg page">{children}</main>
+        <Suspense fallback={null}>
+          <TopNav />
+        </Suspense>
+
+        <main className="container stack-lg page">
+          <Suspense fallback={null}>{children}</Suspense>
+        </main>
+
         <Footer />
       </body>
     </html>

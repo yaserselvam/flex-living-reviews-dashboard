@@ -4,6 +4,7 @@ import ReviewCard from "@/components/ReviewCard";
 import FiltersClient from "@/components/FiltersClient";
 import { headers } from "next/headers";
 import PublicRefresher from "@/components/PublicRefresher";
+import { Suspense } from "react";
 
 export const dynamic = "force-dynamic";
 
@@ -181,11 +182,13 @@ export default async function DashboardPage({ searchParams }: PageProps) {
       </div>
 
       {/* Filters – client component manages state <-> URL syncing and renders FilterBar */}
-      <FiltersClient
-        initialFilters={initialFilters}
-        categories={categories}
-        channels={channels}
-      />
+      <Suspense fallback={null}>
+        <FiltersClient
+          initialFilters={initialFilters}
+          categories={categories}
+          channels={channels}
+        />
+      </Suspense>
 
       {/* Reviews list */}
       <div className="grid gap-4">
