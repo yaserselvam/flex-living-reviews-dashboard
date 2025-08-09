@@ -553,6 +553,9 @@ video {
 .visible {
   visibility: visible;
 }
+.static {
+  position: static;
+}
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -574,6 +577,9 @@ video {
 }
 .mt-6 {
   margin-top: 1.5rem;
+}
+.mt-8 {
+  margin-top: 2rem;
 }
 .block {
   display: block;
@@ -610,6 +616,9 @@ video {
 }
 .max-w-7xl {
   max-width: 80rem;
+}
+.list-disc {
+  list-style-type: disc;
 }
 .flex-col {
   flex-direction: column;
@@ -707,6 +716,13 @@ video {
 .py-8 {
   padding-top: 2rem;
   padding-bottom: 2rem;
+}
+.py-10 {
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+.pl-6 {
+  padding-left: 1.5rem;
 }
 .font-serif {
   font-family: var(--logo-serif), ui-serif, Georgia, Cambria, Times New Roman, Times, serif;
