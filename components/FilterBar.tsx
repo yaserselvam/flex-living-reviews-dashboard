@@ -1,14 +1,27 @@
 "use client";
 
 import { useMemo, useCallback } from "react";
-import type { FilterState } from "@/lib/types";
+import type { FilterState, Sort } from "@/lib/types";
 
 type Props = {
   state: FilterState;
-  setState: (updater: (s: FilterState) => FilterState) => void;
   categories: string[];
   channels: string[];
+  onRatingChange: (min: number, max: number) => void;
+  onCategoryChange: (value: string) => void;
+  onChannelChange: (value: string) => void;
+  onFromDateChange: (value: string) => void;
+  onToDateChange: (value: string) => void;
+  onSortChange: (value: Sort) => void;
+  onReset: () => void;
 };
+
+// Valid sort values (keeps typing strict without casts)
+const SORT_VALUES = ["date_desc", "date_asc", "rating_desc", "rating_asc"] as const;
+type SortLiteral = typeof SORT_VALUES[number];
+function isSort(value: string): value is SortLiteral {
+  return (SORT_VALUES as readonly string[]).includes(value);
+}
 
 function clampRating(n: number) {
   if (!Number.isFinite(n)) return 1;
@@ -17,7 +30,7 @@ function clampRating(n: number) {
   return Math.round(n);
 }
 
-export default function FilterBar({ state, setState, categories, channels }: Props) {
+export default function FilterBar({ state, categories, channels, onRatingChange, onCategoryChange, onChannelChange, onFromDateChange, onToDateChange, onSortChange, onReset }: Props) {
   const catList = useMemo(
     () => ["all", ...Array.from(new Set(categories)).sort()],
     [categories]
@@ -27,39 +40,36 @@ export default function FilterBar({ state, setState, categories, channels }: Pro
     [channels]
   );
 
-  // Ensure ratingMin <= ratingMax and values in [1..5]
-  const applyRating = useCallback(
-    (min: number, max: number) => {
-      const rMin = clampRating(min);
-      const rMax = clampRating(max);
-      if (rMin > rMax) {
-        return setState((s) => ({ ...s, ratingMin: rMax, ratingMax: rMin }));
-      }
-      setState((s) => ({ ...s, ratingMin: rMin, ratingMax: rMax }));
+  // Rating handlers
+  const onMinChange = useCallback(
+    (val: string) => {
+      const min = clampRating(Number(val));
+      const max = clampRating(Number(state.ratingMax ?? 5));
+      if (min > max) onRatingChange(max, min);
+      else onRatingChange(min, max);
     },
-    [setState]
+    [onRatingChange, state.ratingMax]
   );
 
-  const onMinChange = (val: string) => {
-    const n = Number(val);
-    applyRating(Number.isFinite(n) ? n : 1, state.ratingMax ?? 5);
-  };
+  const onMaxChange = useCallback(
+    (val: string) => {
+      const max = clampRating(Number(val));
+      const min = clampRating(Number(state.ratingMin ?? 1));
+      if (min > max) onRatingChange(max, min);
+      else onRatingChange(min, max);
+    },
+    [onRatingChange, state.ratingMin]
+  );
 
-  const onMaxChange = (val: string) => {
-    const n = Number(val);
-    applyRating(state.ratingMin ?? 1, Number.isFinite(n) ? n : 5);
-  };
-
-  const reset = () =>
-    setState(() => ({
-      ratingMin: 1,
-      ratingMax: 5,
-      category: "all",
-      channel: "all",
-      sortBy: "date_desc",
-      from: "",
-      to: "",
-    }));
+  const onSortSelect = useCallback(
+    (val: string) => {
+      if (isSort(val)) {
+        // SortLiteral is compatible with our Sort union from types
+        onSortChange(val as Sort);
+      }
+    },
+    [onSortChange]
+  );
 
   return (
     <section className="card p-4 sm:p-5" aria-label="Filters">
@@ -75,7 +85,6 @@ export default function FilterBar({ state, setState, categories, channels }: Pro
             max={5}
             value={state.ratingMin ?? 1}
             onChange={(e) => onMinChange(e.target.value)}
-            onBlur={(e) => onMinChange(e.target.value)}
             className="input mt-1"
             aria-describedby="flt-min-help"
           />
@@ -93,7 +102,6 @@ export default function FilterBar({ state, setState, categories, channels }: Pro
             max={5}
             value={state.ratingMax ?? 5}
             onChange={(e) => onMaxChange(e.target.value)}
-            onBlur={(e) => onMaxChange(e.target.value)}
             className="input mt-1"
             aria-describedby="flt-max-help"
           />
@@ -106,7 +114,7 @@ export default function FilterBar({ state, setState, categories, channels }: Pro
           <select
             id="flt-category"
             value={state.category ?? "all"}
-            onChange={(e) => setState((s) => ({ ...s, category: e.target.value }))}
+            onChange={(e) => onCategoryChange(e.target.value)}
             className="select mt-1"
           >
             {catList.map((c) => (
@@ -123,7 +131,7 @@ export default function FilterBar({ state, setState, categories, channels }: Pro
           <select
             id="flt-channel"
             value={state.channel ?? "all"}
-            onChange={(e) => setState((s) => ({ ...s, channel: e.target.value }))}
+            onChange={(e) => onChannelChange(e.target.value)}
             className="select mt-1"
           >
             {chanList.map((c) => (
@@ -141,7 +149,7 @@ export default function FilterBar({ state, setState, categories, channels }: Pro
             id="flt-from"
             type="date"
             value={state.from ?? ""}
-            onChange={(e) => setState((s) => ({ ...s, from: e.target.value }))}
+            onChange={(e) => onFromDateChange(e.target.value)}
             className="input mt-1"
           />
         </div>
@@ -153,7 +161,7 @@ export default function FilterBar({ state, setState, categories, channels }: Pro
             id="flt-to"
             type="date"
             value={state.to ?? ""}
-            onChange={(e) => setState((s) => ({ ...s, to: e.target.value }))}
+            onChange={(e) => onToDateChange(e.target.value)}
             className="input mt-1"
           />
         </div>
@@ -164,7 +172,7 @@ export default function FilterBar({ state, setState, categories, channels }: Pro
           <select
             id="flt-sort"
             value={state.sortBy ?? "date_desc"}
-            onChange={(e) => setState((s) => ({ ...s, sortBy: e.target.value as FilterState["sortBy"] }))}
+            onChange={(e) => onSortSelect(e.target.value)}
             className="select mt-1 w-full"
           >
             <option value="date_desc">Newest first</option>
@@ -177,7 +185,7 @@ export default function FilterBar({ state, setState, categories, channels }: Pro
 
       {/* Actions */}
       <div className="mt-4 flex justify-end">
-        <button type="button" onClick={reset} className="btn btn-ghost">
+        <button type="button" onClick={onReset} className="btn btn-ghost">
           Reset filters
         </button>
       </div>

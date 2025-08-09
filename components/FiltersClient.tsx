@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import type { Route } from "next";
-import type { FilterState } from "@/lib/types";
+import type { FilterState, Sort } from "@/lib/types";
 import FilterBar from "./FilterBar";
 
 type Props = {
@@ -122,12 +122,46 @@ export default function FiltersClient({ initialFilters, categories, channels }: 
   const catList = useMemo(() => categories, [categories]);
   const chanList = useMemo(() => channels, [channels]);
 
+  const onRatingChange = useCallback((min: number, max: number) => {
+    setState((s) => ({ ...s, ratingMin: min, ratingMax: max }));
+  }, []);
+
+  const onCategoryChange = useCallback((value: string) => {
+    setState((s) => ({ ...s, category: value }));
+  }, []);
+
+  const onChannelChange = useCallback((value: string) => {
+    setState((s) => ({ ...s, channel: value }));
+  }, []);
+
+  const onFromDateChange = useCallback((value: string) => {
+    setState((s) => ({ ...s, from: value }));
+  }, []);
+
+  const onToDateChange = useCallback((value: string) => {
+    setState((s) => ({ ...s, to: value }));
+  }, []);
+
+  const onSortChange = useCallback((value: Sort) => {
+    setState((s) => ({ ...s, sortBy: value }));
+  }, []);
+
+  const onReset = useCallback(() => {
+    setState(() => ({ ...DEFAULTS }));
+  }, []);
+
   return (
     <FilterBar
       state={state}
-      setState={setState}
       categories={catList}
       channels={chanList}
+      onRatingChange={onRatingChange}
+      onCategoryChange={onCategoryChange}
+      onChannelChange={onChannelChange}
+      onFromDateChange={onFromDateChange}
+      onToDateChange={onToDateChange}
+      onSortChange={onSortChange}
+      onReset={onReset}
     />
   );
 }

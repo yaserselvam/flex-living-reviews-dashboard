@@ -7,7 +7,6 @@ export default function Footer() {
         <span className="font-medium">the flex.</span>
 
         <nav className="flex items-center gap-4">
-          <a href="/properties" className="hover:text-gray-900">Public Reviews</a>
           <a href="/privacy" className="hover:text-gray-900">Privacy Policy</a>
           <a href="/terms" className="hover:text-gray-900">Terms</a>
         </nav>
