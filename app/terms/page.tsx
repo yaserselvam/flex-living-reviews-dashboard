@@ -1,4 +1,5 @@
-export const dynamic = "force-dynamic";
+export const dynamic = "force-static";
+import { Suspense } from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -7,7 +8,7 @@ export const metadata: Metadata = {
   description: "Usage terms for the Flex Living reviews dashboard.",
 };
 
-export default function TermsPage() {
+function TermsContent() {
   return (
     <div className="stack-lg">
       <section className="card p-6">
@@ -16,10 +17,10 @@ export default function TermsPage() {
           <p>
             By using this dashboard, you agree to use it for legitimate business purposes only.
             Do not upload sensitive personal data. Content visibility controls ("Show on Website")
-            are your responsibility and should reflect Flex Living's publishing policies.
+            are your responsibility and should reflect Flex Living&apos;s publishing policies.
           </p>
           <p>
-            The software is provided "as is." We aim for high availability, but occasional maintenance
+            The software is provided &quot;as is.&quot; We aim for high availability, but occasional maintenance
             or outages may occur.
           </p>
           <p>
@@ -36,5 +37,15 @@ export default function TermsPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+export default function TermsPage() {
+  // Wrap in Suspense to satisfy Next.js when a Client Component higher up
+  // (e.g., the header) uses hooks like useSearchParams.
+  return (
+    <Suspense fallback={null}>
+      <TermsContent />
+    </Suspense>
   );
 }

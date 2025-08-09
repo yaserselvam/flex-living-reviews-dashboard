@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 export const metadata = {
   title: "Privacy Policy • Flex Living Reviews Dashboard",
   description: "Privacy policy for the Flex Living Reviews Dashboard demo app.",
@@ -5,7 +7,7 @@ export const metadata = {
 
 export const dynamic = "force-static"; // allow static prerender
 
-export default function PrivacyPage() {
+function PrivacyContent() {
   return (
     <div className="container py-10">
       <h1 className="text-2xl font-semibold">Privacy Policy</h1>
@@ -40,5 +42,15 @@ export default function PrivacyPage() {
         For questions about this demo dashboard, please contact the project maintainer.
       </p>
     </div>
+  );
+}
+
+export default function PrivacyPage() {
+  // The Suspense boundary satisfies Next.js when a parent layout includes
+  // a client component that calls useSearchParams (e.g., TopNav).
+  return (
+    <Suspense fallback={null}>
+      <PrivacyContent />
+    </Suspense>
   );
 }
